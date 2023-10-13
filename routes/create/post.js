@@ -3,11 +3,13 @@ const router = express.Router();
 const Post = require('../../models/post');
 const User = require('../../models/user'); // Import your User model
 const Group = require('../../models/group'); // Import your Group model
+const fetchuser = require('../../middleware/fetchuser');
 
 // Create a route to add a new post
-router.post('/user', async (req, res) => {
+router.post('/user',fetchuser, async (req, res) => {
   try {
-    const { postText, postImages, likeCount, comment, author } = req.body;
+    const { postText, postImages, likeCount, comment  } = req.body;
+    var author =req.user.id
     const newPost = new Post({
       postText,
       postImages,
@@ -38,9 +40,10 @@ router.post('/user', async (req, res) => {
 });
 
 // Create a route to add a new post to a group
-router.post('/group', async (req, res) => {
+router.post('/group',fetchuser, async (req, res) => {
   try {
-    const { postText, postImages, likeCount, comment, author,groupId } = req.body;
+    var author =req.user.id
+    const { postText, postImages, likeCount, comment,groupId } = req.body;
     const newPost = new Post({
       postText,
       postImages,

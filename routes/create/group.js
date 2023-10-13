@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Group = require('../../models/group');
+const fetchuser = require('../../middleware/fetchuser');
 
 // Create a route to create a new group
-router.post('/', async (req, res) => {
+router.post('/',fetchuser, async (req, res) => {
   try {
-    const { name, description, imageUrl, creator } = req.body;
-
+    const { name, description, imageUrl } = req.body;
+var creator =req.user.id;
     // Ensure that the creator field is provided
     if (!creator) {
       return res.status(400).json({ message: 'Creator is required' });

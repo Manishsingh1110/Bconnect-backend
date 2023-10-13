@@ -2,29 +2,15 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const router = express.Router();
 const Customermodel = require('../../models/user');
-const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'bconnect'; // Replace with your actual JWT secret
+var fetchuser = require('../../middleware/fetchuser')
 
 // Create a route to delete a user account
-router.delete('/', async (req, res) => {
+router.delete('/',fetchuser, async (req, res) => {
   try {
-    const {password} = req.body;
-
-    // Verify user authentication before allowing deletion
-    const token = req.header('x-auth-token');
-
-    if (!token) {
-      return res.status(401).json({ msg: 'Unauthorized: No token provided' });
-    }
-
     try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-
-      if (!decoded) {
-        return res.status(401).json({ msg: 'Unauthorized: Invalid token' });
-      }
-
-      const userId = decoded.user.id;
+      const {password} = req.body;   
+    
+      const userId = req.user.id;
 
       // Verify the provided email and password
       const user = await Customermodel.findOne({ _id: userId });

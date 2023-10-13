@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/user');
 const Group = require('../../models/group');
+const fetchuser = require('../../middleware/fetchuser');
 
 // Update user profile
-router.put('/profile/:userId', async (req, res) => {
+router.put('/profile',fetchuser, async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.id;
     const { profile } = req.body;
 
     // Check if the user exists
@@ -35,9 +36,9 @@ router.put('/profile/:userId', async (req, res) => {
 
 
 // Add friends to a user
-router.put('/friends/:userId', async (req, res) => {
+router.put('/friends',fetchuser, async (req, res) => {
     try {
-      const userId = req.params.userId;
+      const userId = req.user.id;
       const { friends } = req.body;
   
       // Check if the user exists
@@ -48,10 +49,9 @@ router.put('/friends/:userId', async (req, res) => {
       }
   
       // Add friends
-      if (friends && Array.isArray(friends)) {
-        user.friends.push(...friends);
+      if (!user.friends.includes(friends)) {
+        user.friends.push(friends);
       }
-  
       // Save the updated user
       const updatedUser = await user.save();
       res.status(200).json(updatedUser);
@@ -64,9 +64,9 @@ router.put('/friends/:userId', async (req, res) => {
   
 
 // Join groups
-router.put('/groups/:userId', async (req, res) => {
+router.put('/groups',fetchuser, async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.user.id;
     const { groups } = req.body;
 
     // Check if the user exists

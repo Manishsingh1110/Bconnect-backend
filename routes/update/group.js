@@ -3,9 +3,9 @@ const router = express.Router();
 const Group = require('../../models/group');
 
 // Update a group
-router.put('/:groupId', async (req, res) => {
+router.put('/', async (req, res) => {
   try {
-    const groupId = req.params.groupId;
+    const groupId = req.body.groupId;
     const { name, description, imageUrl, members, admins } = req.body;
 
     // Check if the group exists

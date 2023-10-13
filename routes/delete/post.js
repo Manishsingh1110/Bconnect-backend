@@ -3,11 +3,12 @@ const router = express.Router();
 const Post = require('../../models/post');
 const User = require('../../models/user');
 const Group = require('../../models/group');
+var fetchuser = require('../../middleware/fetchuser')
 
 // Delete a user's post by post ID
-router.delete('/user/:postId', async (req, res) => {
+router.delete('/user',fetchuser, async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const postId = req.body.postId;
     const userId = req.user.id; // Assuming you have authentication and have the user's ID
 
     // Check if the post exists and belongs to the user
@@ -31,9 +32,10 @@ router.delete('/user/:postId', async (req, res) => {
 });
 
 // Delete a group's post by post ID
-router.delete('/group/:postId', async (req, res) => {
+router.delete('/group',fetchuser,async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const postId = req.body.postId;
+    const groupId = req.body.groupId;
     const userId = req.user.id; // Assuming you have authentication and have the user's ID
 
     // Check if the post exists
@@ -49,7 +51,7 @@ router.delete('/group/:postId', async (req, res) => {
     }
 
     // Remove the post from the group's posts array
-    await Group.updateOne({ _id: post.group }, { $pull: { posts: postId } });
+    await Group.updateOne({ _id: groupId}, { $pull: { posts: postId } });
 
     // Delete the post from the database
     await post.remove();

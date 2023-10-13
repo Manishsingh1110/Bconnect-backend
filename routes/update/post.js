@@ -3,9 +3,9 @@ const router = express.Router();
 const Post = require('../../models/post');
 
 // Update a post
-router.put('/:postId', async (req, res) => {
+router.put('/', async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const postId = req.bdoy.postId;
     const { postText, postImages, likeCount, comment } = req.body;
 
     // Check if the post exists
