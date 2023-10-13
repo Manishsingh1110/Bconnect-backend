@@ -13,7 +13,6 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 mongoose.set('strictQuery',false)
 const mongoURI = process.env.MONGODB_OBJECT_ID;
-
 const connectDB = async()=>{
 	try {
 		const conn = await mongoose.connect(mongoURI)
@@ -25,8 +24,9 @@ const connectDB = async()=>{
 }
 
 
+
 app.get('/',(req,res)=>{
-	res.send({"Start": true })
+	res.send({"Stat": true })
 })
 
 
@@ -36,4 +36,3 @@ connectDB().then(()=>{
 
 	})
 })
-
