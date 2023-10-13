@@ -23,6 +23,24 @@ const connectDB = async()=>{
 	}
 }
 
+app.use('/app/createGroup',require('./routes/create/group'))
+app.use('/app/createuser',require('./routes/create/user'))
+app.use('/app/createpost',require('./routes/create/post'))
+
+
+app.use('/app/getGroup',require('./routes/get/group'))
+app.use('/app/getuser',require('./routes/get/user'))
+app.use('/app/getpost',require('./routes/get/post'))
+
+
+app.use('/app/updateGroup',require('./routes/update/group'))
+app.use('/app/updateuser',require('./routes/update/user'))
+app.use('/app/updatepost',require('./routes/update/post'))
+
+
+app.use('/app/deleteGroup',require('./routes/delete/group'))
+app.use('/app/deleteuser',require('./routes/delete/user'))
+app.use('/app/deletepost',require('./routes/delete/post'))
 
 
 app.get('/',(req,res)=>{
