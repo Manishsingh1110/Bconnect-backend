@@ -26,7 +26,7 @@ const connectDB = async()=>{
 
 
 app.get('/',(req,res)=>{
-	res.send({"Stat": true })
+	res.send({"Start": true })
 })
 
 
