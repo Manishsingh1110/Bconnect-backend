@@ -49,13 +49,12 @@ router.post('/', upload.single('avatar'), async (req, res) => {
     console.log(req.body)
 
     if (!username || !email || !password || !companyname || !companyscale) {
-      // If there's an error, delete the uploaded file and the user's directory
       if (req.file) {
         const filePath = req.file.path;
         fs.unlinkSync(filePath);
       }
       const userUploadsDir = path.join(uploadDirectory, username);
-      rimraf.sync(userUploadsDir); // Delete the user's directory
+      rimraf.sync(userUploadsDir);
       return res.status(400).json({ msg: "Not all required fields have been entered" });
     }
 
