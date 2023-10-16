@@ -9,7 +9,7 @@ var fetchuser = require('../../middleware/fetchuser')
 router.delete('/user',fetchuser, async (req, res) => {
   try {
     const postId = req.body.postId;
-    const userId = req.user.id; // Assuming you have authentication and have the user's ID
+    const userId = req.user.id;
 
     // Check if the post exists and belongs to the user
     const post = await Post.findOne({ _id: postId, author: userId });
@@ -36,7 +36,7 @@ router.delete('/group',fetchuser,async (req, res) => {
   try {
     const postId = req.body.postId;
     const groupId = req.body.groupId;
-    const userId = req.user.id; // Assuming you have authentication and have the user's ID
+    const userId = req.user.id;
 
     // Check if the post exists
     const post = await Post.findOne({ _id: postId });

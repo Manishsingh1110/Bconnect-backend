@@ -8,9 +8,10 @@ const JWT_SECRET = 'bconnect';
 router.post('/', async (req, res) => {
   try {
     console.log("Processing a request to Login");
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({ msg: "Not all fields have been entered" });
+    const { email, password } = req.body;
+    console.log(req.body)
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Not all fields have entered",email,password });
     }
     const user = await Customermodel.findOne({ email });
     if (!user) {
