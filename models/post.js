@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const postSchema = mongoose.Schema({
   postText: { type: String, required: true },
   postImages: [String],
-  likeCount: { type: Number},
+  likeCount: { type: Number,default:0},
   comment: [{ type: String}],
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
