@@ -49,6 +49,7 @@ router.post('/', upload.single('avatar'), async (req, res) => {
       lastname,
       description,
       profileType,
+      aboutus
     } = req.body;
     console.log(req.body)
 
@@ -110,7 +111,8 @@ router.post('/', upload.single('avatar'), async (req, res) => {
       lastname,
       description,
       avatar,
-      profileType
+      profileType,
+      aboutus
     });
 
     const savedCustomer = await newCustomer.save();
