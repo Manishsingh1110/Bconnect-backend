@@ -6,6 +6,9 @@ const path = require('path');
 const fs = require('fs');
 const rimraf = require('rimraf'); // Import the 'rimraf' library for directory removal
 const  User  = require('../../models/user');
+const bodyParser = require('body-parser');
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
 
 const uploadDirectory = 'uploads/avatars';
 
@@ -101,7 +104,7 @@ router.post('/', upload.single('avatar'), async (req, res) => {
       password: passwordHash,
       companyname,
       companyscale,
-      Products,
+      Products:JSON.parse(Products),
       firstname,
       lastname,
       description,
