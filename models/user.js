@@ -13,9 +13,16 @@ const userSchema = mongoose.Schema(
     description: { type: String },
     avatar: { type: String },
     coverPhoto: { type: String },
+    aboutus: { type: String },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+    profileType: { 
+      type: String, 
+      enum: ['user', 'company'], 
+      default: 'user',
+      required: true 
+    }
   },
   {
     timestamps: true,
