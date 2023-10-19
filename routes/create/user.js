@@ -4,36 +4,48 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const rimraf = require('rimraf'); // Import the 'rimraf' library for directory removal
 const  User  = require('../../models/user');
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-const uploadDirectory = 'uploads/avatars';
+// const uploadDirectory = 'uploads/avatars';
+//
+// if (!fs.existsSync(uploadDirectory)) {
+//   fs.mkdirSync(uploadDirectory, { recursive: true });
+// }
+//
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const username = req.body.username;
+//     const userUploadsDir = path.join(uploadDirectory, username);
+//
+//     if (!fs.existsSync(userUploadsDir)) {
+//       fs.mkdirSync(userUploadsDir, { recursive: true });
+//     }
+//
+//     cb(null, userUploadsDir);
+//   },
+//   filename: function (req, file, cb) {
+//     const extname = path.extname(file.originalname);
+//     cb(null, 'avatar_' + Date.now() + extname);
+//   },
+// });
+//
+// const upload = multer({ storage });
+//
+const firebaseApp = require('firebase/app')
+const firebaseStorage = require('firebase/storage');
+const multer =require("multer");
+const config = require("../../config")
+//Initialize a firebase application
+firebaseApp.initializeApp(config.firebaseConfig);
 
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory, { recursive: true });
-}
+// Initialize Cloud Storage and get a reference to the service
+const storage = firebaseStorage.getStorage();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const username = req.body.username;
-    const userUploadsDir = path.join(uploadDirectory, username);
-
-    if (!fs.existsSync(userUploadsDir)) {
-      fs.mkdirSync(userUploadsDir, { recursive: true });
-    }
-
-    cb(null, userUploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const extname = path.extname(file.originalname);
-    cb(null, 'avatar_' + Date.now() + extname);
-  },
-});
-
-const upload = multer({ storage });
+// Setting up multer as a middleware to grab photo uploads
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/', upload.single('avatar'), async (req, res) => {
   try {
@@ -127,6 +139,40 @@ router.post('/', upload.single('avatar'), async (req, res) => {
     rimraf.sync(userUploadsDir); // Delete the user's directory
     return res.status(500).json({ msg: "Server error" });
   }
+});
+const giveCurrentDateTime = () => {
+    const today = new Date();
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + ' ' + time;
+    return dateTime;
+}
+router.post("/", upload.single("profilepic"), async (req, res) => {
+    try {
+        const dateTime = giveCurrentDateTime();
+
+        const storageRef = firebaseStorage.ref(storage, `ProfilePic/${req.file.originalname + "       " + dateTime}`);
+
+        // Create file metadata including the content type
+        const metadata = {
+            contentType: 'image/png',
+        };
+
+        // Upload the file in the bucket storage
+        const snapshot = await firebaseStorage.uploadBytesResumable(storageRef, req.file.buffer, metadata);
+        //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+        // Grab the public url
+        const downloadURL = await firebaseStorage.getDownloadURL(snapshot.ref);
+
+        // console.log('File successfully uploaded.');
+        return res.send({
+            message: 'file uploaded to firebase storage',
+            downloadURL: downloadURL
+        })
+    } catch (error) {
+        return res.status(400).send(error.message)
+    }
 });
 
 module.exports = router;
