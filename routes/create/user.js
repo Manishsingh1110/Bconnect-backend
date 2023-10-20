@@ -36,7 +36,6 @@ router.use(bodyParser.urlencoded({ extended: false }));
 //
 const firebaseApp = require('firebase/app')
 const firebaseStorage = require('firebase/storage');
-const multer =require("multer");
 const config = require("../../config")
 //Initialize a firebase application
 firebaseApp.initializeApp(config.firebaseConfig);
@@ -147,7 +146,7 @@ const giveCurrentDateTime = () => {
     const dateTime = date + ' ' + time;
     return dateTime;
 }
-router.post("/", upload.single("profilepic"), async (req, res) => {
+router.post("/pic", upload.single("profilepic"), async (req, res) => {
     try {
         const dateTime = giveCurrentDateTime();
 
