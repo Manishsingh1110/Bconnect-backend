@@ -50,7 +50,7 @@ router.post('/', fetchuser, upload.fields([{ name: 'avatar', maxCount: 1 }, { na
     const backgroundMetadata = { contentType: 'image/png' };
     const backgroundSnapshot = await firebaseStorage.uploadBytesResumable(backgroundStorageRef, backgroundAvatarFile.buffer, backgroundMetadata);
     backgroundAvatarURL = await firebaseStorage.getDownloadURL(backgroundSnapshot.ref);
-
+    const industriesproductArray = industriesproduct.split(',');
     // Create a new group with the creator as the first admin
     const newGroup = new Group({
       name,
@@ -59,7 +59,7 @@ router.post('/', fetchuser, upload.fields([{ name: 'avatar', maxCount: 1 }, { na
       backgroundimageUrl: backgroundAvatarURL,
       creator,
       location,
-      industriesproduct,
+      industriesproduct: industriesproductArray,
       admins: [creator],
     });
 
