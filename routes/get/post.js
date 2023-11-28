@@ -38,7 +38,30 @@ router.post('/userpost', fetchuser, async (req, res) => {
     const userId = req.user.id;
 
     // Use the find method to retrieve all posts with the specified author ID
-    const userPosts = await Post.find({ author: userId });
+    const userPosts = await Post.aggregate([
+      { 
+        $match: { author: userId } // Match posts with the specified userId
+      },
+      {
+        $lookup: {
+          from: 'Users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author',
+        },
+      },
+      {
+        $project: {
+          'author.password': 0, // Exclude the password field from author
+        },
+      },
+      {
+        $addFields: {
+          author: { $arrayElemAt: ['$author', 0] } // Replace 'author' with the first (and only) element of the 'author' array
+        }
+      }
+    ]);
+    
 
     res.status(200).json(userPosts);
   } catch (error) {
