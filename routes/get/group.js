@@ -7,11 +7,13 @@ router.get('/', async (req, res) => {
   try {
     // Fetch random groups and populate all fields for the referenced documents
     const randomGroups = await Group.aggregate([{ $sample: { size: 40 } }])
-      .populate('creator')
-      .populate('admins')
-      .populate('members')
-      .populate('posts')
-      .exec();
+    .exec();
+
+  // Use populate for each reference field individually
+  await Group.populate(randomGroups, { path: 'creator' });
+  await Group.populate(randomGroups, { path: 'admins' });
+  await Group.populate(randomGroups, { path: 'members' });
+  await Group.populate(randomGroups, { path: 'posts' });
 
     res.status(200).json(randomGroups);
   } catch (error) {
