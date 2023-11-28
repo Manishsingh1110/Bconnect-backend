@@ -62,7 +62,7 @@ router.post('/userpost', fetchuser, async (req, res) => {
       }
     ]);
     
-
+console.log(userPosts)
     res.status(200).json(userPosts);
   } catch (error) {
     console.error(error);
