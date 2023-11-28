@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-router.get('/userpost', fetchuser, async (req, res) => {
+router.post('/userpost', fetchuser, async (req, res) => {
   try {
     const userId = req.user.id;
 
