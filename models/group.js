@@ -4,7 +4,10 @@ const groupSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
+    industriesproduct: [{ type: String }],
     imageUrl: { type: String },
+    backgroundimageUrl: { type: String },
+    location: { type: String },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
