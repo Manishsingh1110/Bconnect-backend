@@ -25,6 +25,7 @@ const connectDB = async()=>{
 }
 
 app.use('/app/createGroup',require('./routes/create/group'))
+app.use('/app/createPage',require('./routes/create/createpage'))
 app.use('/app/createuser',require('./routes/create/user'))
 app.use('/app/createpost',require('./routes/create/post'))
 
@@ -32,6 +33,7 @@ app.use('/app/createpost',require('./routes/create/post'))
 app.use('/app/getGroup',require('./routes/get/group'))
 app.use('/app/getuser',require('./routes/get/user'))
 app.use('/app/getpost',require('./routes/get/post'))
+app.use('/app/getpage',require('./routes/get/getpage'))
 
 
 app.use('/app/updateGroup',require('./routes/update/group'))

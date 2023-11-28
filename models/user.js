@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
     coverPhoto: { type: String },
     aboutus: { type: String },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    Page: { type: mongoose.Schema.Types.ObjectId, ref: 'Page' },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
     profileType: { 

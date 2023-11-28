@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Group = require('../../models/group');
+const User = require('../../models/user'); // Import the User model
 const fetchuser = require('../../middleware/fetchuser');
 const bodyParser = require('body-parser');
 const firebaseApp = require('firebase/app');
@@ -20,10 +21,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-
 router.post('/', fetchuser, upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'backgroundavatar', maxCount: 1 }]), async (req, res) => {
   try {
-    const { name, description,industriesproduct,location } = req.body;
+    const { name, description, industriesproduct, location } = req.body;
     const creator = req.user.id;
 
     // Ensure that the creator field is provided
@@ -51,6 +51,7 @@ router.post('/', fetchuser, upload.fields([{ name: 'avatar', maxCount: 1 }, { na
     const backgroundSnapshot = await firebaseStorage.uploadBytesResumable(backgroundStorageRef, backgroundAvatarFile.buffer, backgroundMetadata);
     backgroundAvatarURL = await firebaseStorage.getDownloadURL(backgroundSnapshot.ref);
     const industriesproductArray = industriesproduct.split(',');
+
     // Create a new group with the creator as the first admin
     const newGroup = new Group({
       name,
@@ -61,9 +62,14 @@ router.post('/', fetchuser, upload.fields([{ name: 'avatar', maxCount: 1 }, { na
       location,
       industriesproduct: industriesproductArray,
       admins: [creator],
+      members: [creator],
     });
 
     const savedGroup = await newGroup.save();
+
+    // Update the user's groups array
+    await User.findByIdAndUpdate(creator, { $push: { groups: savedGroup._id } });
+
     res.status(201).json(savedGroup);
   } catch (error) {
     console.error(error);
@@ -80,5 +86,3 @@ const giveCurrentDateTime = () => {
 };
 
 module.exports = router;
-
-
